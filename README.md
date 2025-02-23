@@ -1,22 +1,20 @@
-# CompanyManager With WebApi
+# CompanyManager With Rest Console
 
 **Lernziele:**
 
-- Wie eine REST-API mit ASP.NET Core Web API erstellt, konfiguriert und mit einer SQLite-Datenbank verbunden wird.
-- Wie Daten mit LINQ und Entity Framework Core verarbeitet werden.
-- Wie Controller HTTP-Anfragen verwalten und validieren.
+- Wie mit dem **HttpClient** REST-Schnittstellen abgefragt werden.
+- Wie mit einer Konsolen-Programm über die REST-API abgefragt und manipuliert werden.
 
-
-**Hinweis:** Als Startpunkt wird die Vorlage [CompanyManagerWithSettings](https://github.com/leoggehrer/CompanyManagerWithSettings) verwendet.
+**Hinweis:** Als Startpunkt wird die Vorlage [CompanyManagerWithWebApi](https://github.com/leoggehrer/CompanyManagerWithWebApi) verwendet.
 
 ## Vorbereitung
 
 Bevor mit der Umsetzung begonnen wird, sollte die Vorlage heruntergeladen und die Funktionalität verstanden werden.
 
-### WebApi-Projekt erstellen
+### RestConApp-Projekt erstellen
 
-- Erstellen Sie ein neues Projekt vom Typ **ASP.NET Core Web API** und vergeben Sie den Namen **CompanyManager.WebApi**.
-- Verbinden Sie das Projekt **CompanyManager.WebApi** mit dem Projekt **CompanyManager.Logic**.
+- Erstellen Sie ein neues Projekt vom Typ **Core-Console** und vergeben Sie den Namen **CompanyManager.RestConApp**.
+- Verbinden Sie das Projekt **CompanyManager.RestConApp** mit dem Projekt **CompanyManager.Common**.
 
 ### Packages installieren
 

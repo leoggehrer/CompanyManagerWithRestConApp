@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "RestConAppWithWebApi",
+    "Projects": [
+      {
+        "Path": "CompanyManager.WebApi\\CompanyManager.WebApi.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "CompanyManager.RestConApp\\CompanyManager.RestConApp.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
