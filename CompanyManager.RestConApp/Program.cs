@@ -1,4 +1,4 @@
-﻿using CompanyManager.RestConApp.Models;
+﻿using System;
 using System.Text;
 using System.Text.Json;
 
@@ -128,7 +128,7 @@ namespace CompanyManager.RestConApp
         public static void InitDatabase()
         {
 #if DEBUG
-            UserData userData = new UserData() { UserName = "Admin", Password = "passme1234!" };
+            Models.UserData userData = new() { UserName = "Admin", Password = "passme1234!" };
             HttpClient client = new HttpClient();
 
             client.BaseAddress = new Uri(API_BASE_URL);
@@ -146,17 +146,14 @@ namespace CompanyManager.RestConApp
             Console.WriteLine("Companies:");
             Console.WriteLine("----------");
 
-            HttpClient client = new HttpClient();
-
-            client.BaseAddress = new Uri(API_BASE_URL);
-
+            var client = new HttpClient { BaseAddress = new Uri(API_BASE_URL) };
             var response = client.GetAsync("Companies").Result;
 
             if (response.IsSuccessStatusCode)
             {
                 // Annahme: Die Antwort ist im JSON-Format
                 var json = response.Content.ReadAsStringAsync().Result;
-                var companies = JsonSerializer.Deserialize<Company[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
+                var companies = JsonSerializer.Deserialize<Models.Company[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
 
                 foreach (var company in companies)
                 {
@@ -184,22 +181,28 @@ namespace CompanyManager.RestConApp
             Console.WriteLine("----------------");
 
             Console.Write("Query: ");
-            var query = Console.ReadLine()!;
+            var predicate = Console.ReadLine()!;
+            var client = new HttpClient { BaseAddress = new Uri(API_BASE_URL) };
+            var response = client.GetAsync($"Companies/query/{predicate}").Result;
 
-            try
+            if (response.IsSuccessStatusCode)
             {
-                //foreach (var company in context.CompanySet.AsQueryable().Where(query).Include(e => e.Customers))
-                //{
-                //    Console.WriteLine($"{company}");
-                //    foreach (var customer in company.Customers)
-                //    {
-                //        Console.WriteLine($"{customer}");
-                //    }
-                //}
+                // Annahme: Die Antwort ist im JSON-Format
+                var json = response.Content.ReadAsStringAsync().Result;
+                var companies = JsonSerializer.Deserialize<Models.Company[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
+
+                foreach (var company in companies)
+                {
+                    Console.WriteLine($"{company}");
+                    foreach (var customer in company.Customers)
+                    {
+                        Console.WriteLine($"\t{customer}");
+                    }
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Fehler beim Abrufen der Companies. Status: {response.StatusCode}");
             }
         }
 
@@ -213,17 +216,32 @@ namespace CompanyManager.RestConApp
             Console.WriteLine("Add company:");
             Console.WriteLine("------------");
 
-            //var company = new Logic.Entities.Company();
+            var company = new Models.Company();
 
-            //Console.Write("Name [256]:          ");
-            //company.Name = Console.ReadLine()!;
-            //Console.Write("Adresse [1024]:      ");
-            //company.Address = Console.ReadLine()!;
-            //Console.Write("Beschreibung [1024]: ");
-            //company.Description = Console.ReadLine()!;
+            Console.Write("Name [256]:          ");
+            company.Name = Console.ReadLine()!;
+            Console.Write("Adresse [1024]:      ");
+            company.Address = Console.ReadLine()!;
+            Console.Write("Beschreibung [1024]: ");
+            company.Description = Console.ReadLine()!;
 
-            //context.CompanySet.Add(company);
-            //context.SaveChanges();
+            var client = new HttpClient { BaseAddress = new Uri(API_BASE_URL) };
+            var response = client.PostAsync($"Companies", new StringContent(JsonSerializer.Serialize(company), Encoding.UTF8, "application/json")).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Annahme: Die Antwort ist im JSON-Format
+                var json = response.Content.ReadAsStringAsync().Result;
+                var insCompany = JsonSerializer.Deserialize<Models.Company>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                Console.WriteLine($"'Company' erfolgreich mit der Id={insCompany?.Id} erstellt");
+                Console.Write("Continue with enter...");
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine($"Fehler beim Abrufen der Companies. Status: {response.StatusCode}");
+            }
         }
 
         /// <summary>
@@ -239,22 +257,34 @@ namespace CompanyManager.RestConApp
             Console.WriteLine();
             Console.Write("Name: ");
             var name = Console.ReadLine()!;
-            //var entity = context.CompanySet.FirstOrDefault(e => e.Name == name);
+            var predicate = $"Name == \"{name}\"";
+            var client = new HttpClient { BaseAddress = new Uri(API_BASE_URL) };
+            var response = client.GetAsync($"Companies/query/{predicate}").Result;
 
-            //if (entity != null)
-            //{
-            //    try
-            //    {
-            //        context.CompanySet.Remove(entity);
-            //        context.SaveChanges();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine(ex.Message);
-            //        Console.Write("Continue with enter...");
-            //        Console.ReadLine();
-            //    }
-            //}
+            if (response.IsSuccessStatusCode)
+            {
+                // Annahme: Die Antwort ist im JSON-Format
+                var json = response.Content.ReadAsStringAsync().Result;
+                var companies = JsonSerializer.Deserialize<Models.Company[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
+
+                if (companies.Length == 1)
+                {
+                    var responseDelete = client.DeleteAsync($"Companies/{companies[0].Id}").Result;
+
+                    if (responseDelete.IsSuccessStatusCode == false)
+                    {
+                        Console.WriteLine($"Fehler beim Abrufen der Companies. Status: {response.StatusCode}");
+                        Console.Write("Continue with enter...");
+                        Console.ReadLine();
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Fehler beim Abrufen der Companies. Status: {response.StatusCode}");
+                Console.Write("Continue with enter...");
+                Console.ReadLine();
+            }
         }
     }
 }
