@@ -3,7 +3,7 @@
 **Lernziele:**
 
 - Wie mit dem **HttpClient** REST-Schnittstellen abgefragt werden.
-- Wie mit einer Konsolen-Programm über die REST-API abgefragt und manipuliert werden.
+- Wie mit einem Konsolen-Programm über die REST-API Daten abgefragt und manipuliert werden.
 
 **Hinweis:** Als Startpunkt wird die Vorlage [CompanyManagerWithWebApi](https://github.com/leoggehrer/CompanyManagerWithWebApi) verwendet.
 
