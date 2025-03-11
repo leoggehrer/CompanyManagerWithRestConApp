@@ -35,7 +35,7 @@ builder.Services.AddControllers()
 
 ### Erstellen der Models
 
-Erstellen Sie im Projekt **CompanyManager.WebApi** einen Ordner **Models** und fügen Sie die Klassen **Company**, **Customer** und **Employee** hinzu.
+Erstellen Sie im Projekt **CompanyManager.WithRestConApp** einen Ordner **Models** und fügen Sie die Klassen **Company**, **Customer** und **Employee** hinzu.
 
 Nachfolgend ein Beispiel für das **Company**-Model:
 
