@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 
 namespace CompanyManager.RestConApp
@@ -129,7 +128,7 @@ namespace CompanyManager.RestConApp
         {
 #if DEBUG
             Models.UserData userData = new() { UserName = "Admin", Password = "passme1234!" };
-            HttpClient client = new HttpClient();
+            using HttpClient client = new HttpClient();
 
             client.BaseAddress = new Uri(API_BASE_URL);
             client.PostAsync("System", new StringContent(JsonSerializer.Serialize(userData), Encoding.UTF8, "application/json")).Wait();
@@ -182,7 +181,7 @@ namespace CompanyManager.RestConApp
 
             Console.Write("Query: ");
             var predicate = Console.ReadLine()!;
-            var client = new HttpClient { BaseAddress = new Uri(API_BASE_URL) };
+            using var client = new HttpClient { BaseAddress = new Uri(API_BASE_URL) };
             var response = client.GetAsync($"Companies/query/{predicate}").Result;
 
             if (response.IsSuccessStatusCode)
@@ -225,7 +224,7 @@ namespace CompanyManager.RestConApp
             Console.Write("Beschreibung [1024]: ");
             company.Description = Console.ReadLine()!;
 
-            var client = new HttpClient { BaseAddress = new Uri(API_BASE_URL) };
+            using var client = new HttpClient { BaseAddress = new Uri(API_BASE_URL) };
             var response = client.PostAsync($"Companies", new StringContent(JsonSerializer.Serialize(company), Encoding.UTF8, "application/json")).Result;
 
             if (response.IsSuccessStatusCode)
@@ -258,7 +257,7 @@ namespace CompanyManager.RestConApp
             Console.Write("Name: ");
             var name = Console.ReadLine()!;
             var predicate = $"Name == \"{name}\"";
-            var client = new HttpClient { BaseAddress = new Uri(API_BASE_URL) };
+            using var client = new HttpClient { BaseAddress = new Uri(API_BASE_URL) };
             var response = client.GetAsync($"Companies/query/{predicate}").Result;
 
             if (response.IsSuccessStatusCode)
